@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
 import { Hero } from './hero';
+import { HeroService } from './hero.service';
+
+
 const HEROES: Hero[] = [
   { id: 11, name: 'Mr. Nice' },
   { id: 12, name: 'Narco' },
@@ -14,6 +18,8 @@ const HEROES: Hero[] = [
 ];
 @Component({
   selector: 'my-app',
+  providers: [HeroService],
+
   template: `
     <h1>{{title}}</h1>
     <h2>My Heroes</h2>
@@ -77,10 +83,20 @@ const HEROES: Hero[] = [
   `]
 })
 export class AppComponent {
+
+  constructor(private heroService: HeroService) { }
+
   title = 'Tour of Heroes';
-  heroes = HEROES;
+  heroes: Hero[];
   selectedHero: Hero;
+
+  ngOnInit(): void {
+    this.getHeroes();
+  }
   onSelect(hero: Hero): void {
     this.selectedHero = hero;
+  }
+  getHeroes(): void {
+     this.heroService.getHeroesSlowly().then(heroes => this.heroes = heroes);
   }
 }
